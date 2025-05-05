@@ -1,81 +1,119 @@
-<div class="content">
-  <div class="card-login">
-    <div class="card-header bg-usco-vt header-usco-card">
-      <div class="row">
-        <div class="col">
-          <img
-            mat-card-image
-            src="assets/universidad-surcolombiana-multicampos-white.png"
-            class="img-fluid"
-          />
+<div class="row">
+  <div class="col" style="align-items: center">
+    <div class="">
+      <img
+        src="assets/universidad-surcolombiana-multicampos-white.png"
+        alt="Logo USCO"
+        class="img-fluid mb-4"
+      />
+      <h1>Módulo Solicitud de Asignación de Puntaje</h1>
+      <hr class="hr-usco" />
+      <h4 class="mt-4">
+        Centro de información, tecnologías y control documental
+      </h4>
+      <div class="feature">
+        <i class="fa fa-star"></i>
+        <div>
+          <strong>Característica del sistema</strong>
+          <p>
+            Párrafo describiendo alguna funcionalidad importante que caracterice
+            el sistema, dando a los usuarios una idea de lo que pueden realizar.
+          </p>
         </div>
       </div>
-      <hr class="punteada" />
-      <div class="row">
-        <div class="col">
-          <small class="font-weight-bold text-white">
-            PLANTILLA WEB
-          </small>
+      <div class="feature">
+        <i class="fa fa-star"></i>
+        <div>
+          <strong>Característica del sistema</strong>
+          <p>
+            Párrafo describiendo alguna funcionalidad importante que caracterice
+            el sistema, dando a los usuarios una idea de lo que pueden realizar.
+          </p>
         </div>
       </div>
     </div>
-    <div class="card-body text-center font-usco-gr">
-      <div class="container">
-        <form>
-          <div class="row">
-            <div class="col">
-              <p>
-                Se ha enviado a su correo institucional <br />
-                (<b *ngIf="correo">{{ correo.correo }}</b
-                >) un codigo de verificación. <br />
-                Por favor ingresar a su correo, copia el codigo <br />
-                y diligenciar en el campo correspondiente.
-              </p>
-            </div>
-          </div>
-          <form [formGroup]="formToken">
-            <div class="row pl-5 pr-5">
-              <div class="col">
-                <mat-form-field class="example-full-width" appearance="outline">
-                  <span matPrefix class="p-3"
-                    ><i class="fa-solid fa-lock"></i
-                  ></span>
-                  <mat-label>Código de verificación</mat-label>
-                  <input matInput formControlName="token" autocomplete="off" />
-                </mat-form-field>
-              </div>
-            </div>
-          </form>
-          <div class="row">
-            <div class="col mb-2">
-              <button
-                (click)="validarToken()"
-                type="button"
-                class="btn btn-usco-vt"
-                [disabled]="!formToken.valid"
-              >
-                Validar Token
-                <span
-                  *ngIf="cargando"
-                  class="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <small
-                ><b class="version"
-                  >© {{ today | date : "yyyy" }} CITCD - Versión 2 Construcción
-                  1.0</b
-                ></small
-              >
-            </div>
-          </div>
-        </form>
+  </div>
+  <div class="col font-usco-gr" style="align-items: center">
+    <div class="login-card">
+      <div
+        class="bg-usco-vt pl-4 pr-4 pt-4 pb-2 text-white"
+        style="border-radius: 15px 15px 0px 0px"
+      >
+        <h5 class="font-weight-bold">Iniciar Sesión</h5>
+        <p style="font-size: 12px">
+          Ingresa tus credenciales para acceder al sistema
+        </p>
       </div>
+      <div class="text-center pt-4">
+        <i class="fa-solid fa-shield-halved fa-2x"></i>
+        <h6 class="font-weight-bold">Verificación en dos pasos</h6>
+      </div>
+      <p class="text-center pt-2">
+        Se ha enviado a su correo institucional <br />
+        (<b *ngIf="correo">{{ correo.correo }}</b
+        >) un codigo de verificación. <br />
+        Ingrese el código de 5 digítos enviado <br />
+        a su correo electrónico.
+      </p>
+      <form [formGroup]="formToken" class="pl-4 pr-4">
+        <div class="otp-container mb-4">
+          <input
+            class="otp-input"
+            maxlength="1"
+            id="otp-0"
+            (input)="onInput($event, 0)"
+            (paste)="onPaste($event)"
+          />
+          <input
+            class="otp-input"
+            maxlength="1"
+            id="otp-1"
+            (input)="onInput($event, 1)"
+            (paste)="onPaste($event)"
+          />
+          <input
+            class="otp-input"
+            maxlength="1"
+            id="otp-2"
+            (input)="onInput($event, 2)"
+            (paste)="onPaste($event)"
+          />
+          <input
+            class="otp-input"
+            maxlength="1"
+            id="otp-3"
+            (input)="onInput($event, 3)"
+            (paste)="onPaste($event)"
+          />
+          <input
+            class="otp-input"
+            maxlength="1"
+            id="otp-4"
+            (input)="onInput($event, 4)"
+            (paste)="onPaste($event)"
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn-usco mt-2"
+          [disabled]="!formToken.valid"
+          (click)="validarToken()"
+        >
+          Verificar y acceder
+          <span
+            *ngIf="cargando"
+            class="spinner-border spinner-border-sm"
+          ></span>
+        </button>
+        <div class="support-link">
+          <a routerLink="/login">Soporte</a>
+        </div>
+        <hr />
+        <small class="mb-4"
+          >© {{ fechaActual | date : "yyyy" }} CITCD - Versión 1 Construcción
+          1.0</small
+        >
+      </form>
     </div>
   </div>
 </div>

@@ -1,12 +1,11 @@
 /* SELECTOR UNIVERSAL */
 
-html {
-  height: 100%;
-}
-
+html,
 body {
-  height: 100%;
   margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
@@ -264,10 +263,16 @@ input[type="number"] {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
+.rounded-table {
+  border-radius: 20px 20px 0 0;
+  overflow: hidden; /* Esto es clave para que el border-radius funcione bien */
+}
+
 /* ----- AJUSTE DISEÑO TABLA MATERIAL */
 .mat-mdc-table .mat-mdc-header-cell {
-  background: #1e262b !important;
-  color: #ffffff !important;
+  background: #F9FBFB !important;
+  color: #4e6470 !important;
+  border-radius: 12px !important;
   font-weight: bold !important;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }

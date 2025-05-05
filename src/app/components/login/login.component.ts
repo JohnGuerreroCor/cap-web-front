@@ -10,11 +10,18 @@ import { Router } from '@angular/router';
 import { Usuario } from '../../models/usuario';
 import swal from 'sweetalert2';
 import { TerminosCondicionesService } from 'src/app/services/terminos-condiciones.service';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class LoginComponent implements OnInit {
   // Modelo para almacenar los datos del usuario del formulario de inicio de sesión

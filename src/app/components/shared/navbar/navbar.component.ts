@@ -1,73 +1,107 @@
 import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from 'src/app/services/auth.service';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { NavbarHiddenService } from 'src/app/services/navbar-hidden.service';
 import { FotoService } from 'src/app/services/foto.service';
-import { Foto } from 'src/app/models/foto';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-navbar', // Selector del componente
-  templateUrl: './navbar.component.html', // Plantilla HTML asociada al componente
-  styleUrls: ['./navbar.component.css'], // Estilos asociados al componente
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  // Propiedades públicas que almacenan información del usuario obtenida del servicio de autenticación
-  public personaCodigo: any = this.auth.user.personaCodigo;
+  public perCodigo: any = this.auth.user.personaCodigo;
+  public perCodigoAntigua: any = '' + this.auth.user.personaCodigo;
   public nombre: any = this.auth.user.personaNombre;
   public apellido: any = this.auth.user.personaApellido;
+  public roles: any[] = this.auth.user.roles;
   public horaInicioSesion: any = this.auth.user.horaInicioSesion;
   public horaFinSesion: any = this.auth.user.horaInicioSesion;
 
-  // URL de la API backend obtenida del entorno
-  url: string = environment.URL_BACKEND;
-
-  // Estado del panel (puede ser utilizado para determinar si está abierto o cerrado)
+  url: any = environment.URL_BACKEND;
   panelOpenState = false;
+  panelAbierto: string | null = null;
+  anio = new Date();
 
-  // Objeto que representa la información de la foto del usuario
-  foto: Foto = {
+  foto: any = {
     url: '',
   };
 
-  // Constructor del componente
-  constructor(
-    public auth: AuthService, // Servicio de autenticación
-    private router: Router, // Servicio de enrutamiento
-    public fotoService: FotoService // Servicio para manejar las fotos del usuario
-  ) {
-    // Llamada al servicio para obtener la foto del usuario
-    this.fotoService.mirarFoto('' + this.personaCodigo).subscribe((data) => {
-      var blobFoto = new Blob([data], { type: 'application/json' });
+  public foundMenuItems = [];
 
-      // Verifica si la foto del usuario está disponible
-      if (blobFoto.size !== 4) {
-        // Si la foto está disponible, la convierte en un objeto Blob y la muestra
-        var blob = new Blob([data], { type: 'image/png' });
-        const foto = blob;
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.foto.url = reader.result as string;
-        };
-        reader.readAsDataURL(foto);
-      } else {
-        // Si la foto no está disponible, se solicita la foto antigua del usuario
-        this.fotoService
-          .mirarFotoAntigua('' + this.personaCodigo)
-          .subscribe((data) => {
-            this.foto = data;
-          });
-      }
+  private fotoLoaded = false; // Variable para controlar si la foto se ha cargado
+
+  isHandset$: Observable<any> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(
+      map((result) => result.matches),
+      shareReplay()
+    );
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    public auth: AuthService,
+    private router: Router,
+    public navbarHiddenService: NavbarHiddenService,
+    public fotoService: FotoService
+  ) {}
+
+  hideHintsErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState(
+      control: FormControl | null,
+      form: FormGroupDirective | NgForm | null
+    ): boolean {
+      return !!(
+        control &&
+        control.invalid &&
+        (control.dirty || control.touched)
+      );
+    },
+  };
+
+  togglePanel(panelId: string): void {
+    if (this.panelAbierto === panelId) {
+      this.panelAbierto = null;
+    } else {
+      this.panelAbierto = panelId;
+    }
+  }
+
+  logout(): void {
+    this.auth.logout();
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      },
     });
+
+    Toast.fire({
+      icon: 'success',
+      title: 'Sesión cerrada correctamente.',
+    });
+    this.router.navigate(['/login']);
   }
 
   ngOnInit() {
+    this.loadFoto();
     // Convertir la cadena de horaInicioSesion a un objeto de fecha
     let horaInicioSesionDate = new Date(this.horaInicioSesion + 'Z');
 
     // Sumar dos horas a la hora de inicio de sesión
-    horaInicioSesionDate.setHours(horaInicioSesionDate.getHours() + 1);
+    horaInicioSesionDate.setHours(horaInicioSesionDate.getHours() + 2);
 
     // Convertir la nueva hora a una cadena en el mismo formato
     this.horaFinSesion = horaInicioSesionDate
@@ -101,56 +135,35 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  informacion() {
-    const horaInicioFormateada = formatDate(
-      this.horaInicioSesion,
-      'dd-MM-yyyy, h:mm a',
-      'en-US'
-    );
-    const horaFinFormateada = formatDate(
-      this.horaFinSesion,
-      'dd-MM-yyyy, h:mm a',
-      'en-US'
-    );
+  loadFoto() {
+    if (!this.fotoLoaded) {
+      // Verificar si la foto ya se ha cargado
+      this.fotoService.mirarFoto('' + this.perCodigo).subscribe((data) => {
+        var gg = new Blob([data], { type: 'application/json' });
+        if (gg.size !== 4) {
+          var blob = new Blob([data], { type: 'image/png' });
+          const foto = blob;
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.foto.url = reader.result as string;
+          };
+          reader.readAsDataURL(foto);
+        } else {
+          this.fotoService
+            .mirarFotoAntigua('' + this.perCodigo)
+            .subscribe((data) => {
+              this.foto = data;
+            });
+        }
+      });
 
-    Swal.fire({
-      title: 'Información de inicio de sesión',
-      html: ` 
-        <hr style="border-bottom: dashed 1px #222d32;" />      
-        <small><b>HORA INICIO SESIÓN: </b><br /> ${horaInicioFormateada} </small>      
-        <hr style="border-bottom: dashed 1px #222d32;" />        
-        <small><b>HORA FINALIZACIÓN: </b><br /> ${horaFinFormateada} </small>
-        <hr style="border-bottom: dashed 1px #222d32;" />    
-      `,
-      showConfirmButton: true,
-      confirmButtonText: 'Listo',
-      confirmButtonColor: '#8f141b',
-    });
+      this.fotoLoaded = true; // Marcar que la foto se ha cargado
+    }
   }
 
-  // Método para cerrar la sesión del usuario
-  logout(): void {
-    this.auth.logout(); // Llamada al método de cierre de sesión del servicio de autenticación
-
-    // Muestra una notificación Toast utilizando la librería SweetAlert
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer);
-        toast.addEventListener('mouseleave', Swal.resumeTimer);
-      },
-    });
-
-    Toast.fire({
-      icon: 'success',
-      title: 'Sesión cerrada correctamente.',
-    });
-
-    // Redirección a la página de inicio de sesión
-    this.router.navigate(['/login']);
+  toggle() {
+    this.navbarHiddenService.toggleSideBar();
   }
+
+  buscar() {}
 }
