@@ -20,10 +20,11 @@ export class TokenComponent implements OnInit {
   correo!: Correo;
   codigo!: String;
   codioCorrecto!: String;
-  today = new Date();
+  fechaActual = new Date();
   cargando: boolean = false;
   @Output() rolEvent = new EventEmitter<any>();
   formToken!: FormGroup;
+  otpLength = 5;
 
   constructor(
     public auth: AuthService,
@@ -42,8 +43,51 @@ export class TokenComponent implements OnInit {
   // Método para crear el formulario de token
   private crearFormularioToken(): void {
     this.formToken = this.formBuilder.group({
-      token: new FormControl('', Validators.required),
+      otp: this.formBuilder.array(
+        Array(this.otpLength)
+          .fill('')
+          .map(() => new FormControl(''))
+      ),
     });
+  }
+
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const pasteData = event.clipboardData?.getData('text')?.trim() ?? '';
+    const characters = pasteData.split('');
+
+    if (characters.length !== 5) return; // Asegúrate que sean 5 dígitos
+
+    characters.forEach((char, index) => {
+      const input = document.getElementById(`otp-${index}`) as HTMLInputElement;
+      if (input) {
+        input.value = char.toUpperCase();
+        this.formToken.get('otp')!.value[index] = input.value;
+      }
+    });
+
+    // Enfocar el último input
+    const lastInput = document.getElementById('otp-4') as HTMLInputElement;
+    lastInput?.focus();
+  }
+
+  onInput(event: any, i: number) {
+    const input = event.target;
+    const value = input.value;
+
+    // Solo letras o números, y un solo carácter
+    if (/^[a-zA-Z0-9]{1}$/.test(value)) {
+      input.value = value.toUpperCase();
+      this.formToken.get('otp')!.value[i] = input.value;
+
+      // Mover al siguiente input si existe
+      const nextInput = document.getElementById(`otp-${i + 1}`);
+      if (nextInput) {
+        nextInput.focus();
+      }
+    } else {
+      input.value = '';
+    }
   }
 
   // Método para validar el token ingresado

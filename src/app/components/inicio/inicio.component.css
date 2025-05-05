@@ -36,3 +36,30 @@ legend.scheduler-border {
   padding: 0 10px;
   border-bottom: none;
 }
+
+
+.panel {
+  background-color: white;
+  border-radius: 12px;
+}
+
+.card-custom {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background-color: #FCFDFD;
+}
+.status-dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.status-activa {
+  background-color: #60E01F;
+}
+.status-cerrada {
+  background-color: #ffc107;
+}
+.text-small {
+  font-size: 0.9rem;
+}

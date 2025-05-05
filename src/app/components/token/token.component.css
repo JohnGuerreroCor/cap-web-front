@@ -1,28 +1,163 @@
-.content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 100vh;
 }
 
-.card-login {
-  background: white;
+.col {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+/* Columna izquierda (info institucional) */
+.col:first-child {
+  background-color: #7a0c1e;
+  color: white;
+  text-align: left;
+  flex-direction: column;
+}
+
+/* Columna derecha (login) */
+.col:last-child {
+  background-color: #f4f4f4;
+  flex-direction: column;
+}
+
+.logo-usco {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  max-width: 500px;
+}
+
+.feature i {
+  margin-right: 10px;
+  font-size: 20px;
+  color: white;
+}
+
+.feature p {
+  margin: 5px 0 0;
+}
+
+.login-card {
+  background-color: white;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.btn-usco {
+  background-color: #7a0c1e;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.forgot-link,
+.support-link a {
+  font-size: 14px;
+  color: #7a0c1e;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.support-link {
+  margin: 15px 0;
   text-align: center;
-  border: 1px solid #a6b1b6;
-  border-radius: 15px;
-  -moz-box-shadow: 2px 2px 5px #999;
-  box-shadow: 5px 5px 15px #999;
 }
 
-.header-usco-card {
-  border-radius: 15px 15px 0px 0px;
+small {
+  display: block;
+  margin-top: 10px;
+  color: gray;
+  text-align: center;
 }
 
-.fondo {
-  background-color: #dbe0e2;
+/* 📱 Responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .col {
+    flex: 1 1 100%;
+    padding: 20px;
+  }
+
+  .logo-usco {
+    width: 150px;
+  }
+
+  .login-card {
+    padding: 20px;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  .feature {
+    flex-direction: column;
+  }
+
+  .feature i {
+    margin-bottom: 5px;
+  }
+}
+.hr-usco {
+  height: 2px;
+  background: #ffffff;
+  margin: 0 auto;
+  position: absolute;
+  width: 10%;
 }
 
-.punteada {
-  border-bottom: dashed 1px #ffffff;
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+.otp-input {
+  width: 48px;
+  height: 56px;
+  font-size: 24px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.otp-input:focus {
+  border-color: #8B0000; /* Rojo institucional */
+  box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
 }

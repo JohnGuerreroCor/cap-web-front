@@ -18,7 +18,8 @@ const routes: Routes = [
 
   { path: 'tratamiento-datos', component: AutorizacionDatosComponent },
 
-  { path: 'inicio', component: InicioComponent, canActivate: [AuthGuard] },
+  //{ path: 'inicio', component: InicioComponent, canActivate: [AuthGuard] },
+  { path: 'inicio', component: InicioComponent },
 
   { path: '**', redirectTo: 'acceso-denegado' },
 ];
