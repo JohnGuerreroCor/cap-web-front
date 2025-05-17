@@ -18,6 +18,10 @@ import localeEsCO from '@angular/common/locales/es-CO';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { AutorizacionDatosComponent } from './components/autorizacion-datos/autorizacion-datos.component';
+import {
+  SolicitudComponent,
+  ModalNotificacionCorreo,
+} from './components/solicitud/solicitud.component';
 
 registerLocaleData(localeEsCO, 'es-CO');
 
@@ -31,6 +35,8 @@ registerLocaleData(localeEsCO, 'es-CO');
     NotfoundComponent,
     FooterComponent,
     AutorizacionDatosComponent,
+    SolicitudComponent,
+    ModalNotificacionCorreo,
   ],
   imports: [
     BrowserModule,
@@ -41,9 +47,8 @@ registerLocaleData(localeEsCO, 'es-CO');
     FormsModule,
     ReactiveFormsModule,
   ],
-  /* entryComponents: [
-    EN ESTA DECLARACIÓN VAN TODOS LOS MODALES O DIÁLOGOS QUE SE IMPLEMENTEN CON ANGULAR MATERIAL
-  ], */
+
+  entryComponents: [ModalNotificacionCorreo],
   providers: [
     DatePipe,
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },

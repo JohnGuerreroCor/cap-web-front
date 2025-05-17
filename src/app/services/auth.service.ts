@@ -136,7 +136,10 @@ export class AuthService {
     this.usuario.roles = datos.authorities;
     this.usuario.personaNombre = datos.personaNombre;
     this.usuario.personaApellido = datos.personaApellido;
+    this.usuario.personaIdentificacion = datos.personaIdentificacion;
+    this.usuario.personaEmailInterno = datos.personaEmailInterno;
     this.usuario.horaInicioSesion = datos.horaInicioSesion;
+    console.log(JSON.stringify(this.usuario));
 
     sessionStorage.setItem('usuario', JSON.stringify(this.usuario));
     localStorage.setItem('usuario', JSON.stringify(this.usuario));

@@ -1,30 +1,44 @@
 <app-navbar>
   <div class="row m-4">
-    <div class="col p-4 panel">
+    <div class="col-sm-4 p-4 panel">
       <h4 class="font-usco-gr font-weight-bold pl-1 pb-3">Actas</h4>
       <!-- Card 1 -->
-      <div class="card mb-3 card-custom">
+      <div class="card mb-3 card-custom" *ngFor="let item of listadoActas">
         <div class="card-body pl-4 pr-4">
           <h5 class="card-title font-usco-gr font-weight-bold">
-            Nombre de acta
+            {{ item.nombre }}
           </h5>
           <div class="row mb-3">
-            <div class="col"><strong>Desde:</strong> 01/03/2025</div>
-            <div class="col"><strong>Hasta:</strong> 28/08/2025</div>
+            <div class="col font-usco-gr">
+              <strong>Desde:</strong> {{ item.inicio | date : "dd/MM/yyyy" }}
+            </div>
+            <div class="col font-usco-gr">
+              <strong>Hasta:</strong> {{ item.fin | date : "dd/MM/yyyy" }}
+            </div>
           </div>
-          <p class="card-text text-small">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          <p class="card-text text-small font-usco-gr">
+            {{ item.descripcion }}
           </p>
           <div class="d-flex justify-content-between align-items-center">
-            <span class="text-success"
+            <span *ngIf="item.estadoActa.codigo == 1" class="text-success"
               ><span class="status-activa"></span
               ><i class="fa-regular fa-circle-dot"></i> Activa</span
             >
+            <span *ngIf="item.estadoActa.codigo == 2" class="text-warning"
+              ><span class="status-cerrada"></span
+              ><i class="fa-regular fa-circle-dot"></i> Cerrada</span
+            >
             <a
-              href="#"
+              *ngIf="item.estadoActa.codigo == 1"
+              [routerLink]="['/solicitud', item.codigo]"
               class="font-usco-vt text-decoration-none font-weight-bold"
               >Realizar solicitud</a
+            >
+            <a
+              *ngIf="item.estadoActa.codigo == 2"
+              href="#"
+              class="font-usco-vt text-decoration-none font-weight-bold"
+              >Revisar solicitudes</a
             >
           </div>
         </div>
@@ -41,89 +55,56 @@
       >
         <ng-container matColumnDef="index">
           <th mat-header-cell *matHeaderCellDef>N°</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="font-sm-usco font-usco-gr"
+          >
             {{ dataSource.filteredData.indexOf(element) + 1 }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="titulo">
-          <th mat-header-cell *matHeaderCellDef>Titulo</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            {{ element.titulo }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="normativa">
-          <th mat-header-cell *matHeaderCellDef>Normativa</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            {{ element.normativaTipoNombre }}
-            {{ element.normativaNumero }} DE
-            {{ element.normativaFechaCreacion | date : "yyyy" }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="version">
-          <th mat-header-cell *matHeaderCellDef>Version</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            {{ element.version }}
-          </td>
+        <ng-container matColumnDef="material">
+          <th mat-header-cell *matHeaderCellDef>Material</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="font-sm-usco font-usco-gr"
+          ></td>
         </ng-container>
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef>Fecha</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            {{ element.fechaCreacion | date : "dd-MM-yyyy" }}
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="font-sm-usco font-usco-gr"
+          >
+            {{ element.fecha | date : "dd-MM-yyyy hh:MM a" }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="anexo">
-          <th mat-header-cell *matHeaderCellDef>Requiere anexo</th>
-          <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            <span *ngIf="element.anexo == 1">Si</span>
-            <span *ngIf="element.anexo == 2">No</span>
-            <!--  <button
-            
-            class="btn btn-success btn-sm mr-2"
-            #tooltip="matTooltip"
-            matTooltip="Parametrizar"
-            matTooltipPosition="above"
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="font-sm-usco font-usco-gr"
           >
-            <i class="fa-solid fa-check"></i>
-          </button>
-          <button
-            *ngIf="element.anexo == 2"
-            class="btn btn-secondary btn-sm mr-2"
-            #tooltip="matTooltip"
-            matTooltip="Parametrizar"
-            matTooltipPosition="above"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button> -->
+            <span
+              *ngIf="element.estadoSolicitud.codigo == 1"
+              class="text-warning"
+              ><span class="status-cerrada"></span
+              ><i class="fa-regular fa-circle-dot"></i>
+            </span>
+            {{ element.estadoSolicitud.nombre }}
           </td>
         </ng-container>
         <ng-container matColumnDef="opciones">
-          <th mat-header-cell *matHeaderCellDef>Opciones</th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element" class="font-sm-usco">
-            <button
-              class="btn btn-dark btn-sm mr-2"
-              [routerLink]="['/autorizacion-item', element.codigo]"
-              #tooltip="matTooltip"
-              matTooltip="Parametrizar"
-              matTooltipPosition="above"
+            <a
+              href="#"
+              class="font-usco-vt text-decoration-none font-weight-bold"
+              >Ver más</a
             >
-              <i class="fa-solid fa-folder-tree"></i>
-            </button>
-            <button
-              class="btn btn-info btn-sm mr-2"
-              #tooltip="matTooltip"
-              matTooltip="Editar"
-              matTooltipPosition="above"
-            >
-              <i class="fa-solid fa-pencil fa-xs"></i>
-            </button>
-            <button
-              class="btn btn-danger btn-sm mr-2"
-              #tooltip="matTooltip"
-              matTooltip="Borrar"
-              matTooltipPosition="above"
-            >
-              <i class="fa-solid fa-trash fa-xs"></i>
-            </button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

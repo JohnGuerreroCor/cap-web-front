@@ -96,7 +96,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadFoto();
+    //this.loadFoto();
     // Convertir la cadena de horaInicioSesion a un objeto de fecha
     let horaInicioSesionDate = new Date(this.horaInicioSesion + 'Z');
 

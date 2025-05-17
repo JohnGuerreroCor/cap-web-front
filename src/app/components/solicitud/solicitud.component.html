@@ -1,0 +1,536 @@
+<app-navbar>
+  <form [formGroup]="formularioMaterialAcademico">
+    <div class="row m-4">
+      <div class="col panel">
+        <div class="row p-4">
+          <div class="col">
+            <h5 *ngIf="acta" class="card-title font-usco-gr font-weight-bold">
+              {{ acta.nombre }} - Solicitud MI-INV-FO-05
+            </h5>
+          </div>
+          <div class="col text-right">
+            <button class="btn btn-secondary">Descargar formato</button>
+          </div>
+        </div>
+        <div class="row pl-4 pr-4 pb-3">
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold">
+              Declaración de responsabilidad de la información
+              <span class="text-danger">*</span>
+            </h5>
+          </div>
+        </div>
+        <div class="row pl-4 pr-4">
+          <div class="col">
+            <p class="font-usco-gr text-justify">
+              En mi calidad de docente de la Universidad Surcolombiana de Neiva
+              Huila, me obligo a hacer envío del presente formulario debidamente
+              diligenciado, con los soportes correspondientes. Me abstengo de
+              enviar información que no sea real, y/o que no esté debidamente
+              soportada por los documentos idóneos para este efecto. En caso de
+              no tener certeza acerca de la veracidad de la información enviada
+              al Comité Asignación de Puntaje - CAP, o de no tener seguridad en
+              cuanto a los soportes idóneos para sustentar estos datos, me
+              abstendré de realizar el registro.
+            </p>
+            <p class="font-usco-gr text-justify">
+              En estos términos declaro mi responsabilidad sobre el manejo que
+              daré a la información personal y académica a enviar al CAP.
+            </p>
+          </div>
+        </div>
+        <div class="row pl-3">
+          <div class="col">
+            <mat-checkbox>
+              <small class="font-usco-gr" style="font-size: 16px">
+                Autorizo </small
+              ><small
+                class="font-usco-gr"
+                style="font-size: 16px; color: blue"
+                (click)="notificacionCorreo()"
+              >
+                notificaciones electrónicas</small
+              ><span class="text-danger">* </span></mat-checkbox
+            >
+          </div>
+        </div>
+        <div class="row pl-4 pr-4 mt-4">
+          <div class="col-sm-4">
+            <h5 class="card-title font-usco-gr font-weight-bold">
+              ¿Pertenece a un grupo de investigación?
+              <span class="text-danger">*</span>
+            </h5>
+            <mat-radio-group formControlName="perteneceGrupoInvestigacion">
+              <mat-radio-button class="example-margin" value="1"
+                >Si</mat-radio-button
+              >
+              <mat-radio-button class="example-margin" value="2"
+                >No</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+          <div
+            class="col"
+            *ngIf="
+              this.formularioMaterialAcademico.get(
+                'perteneceGrupoInvestigacion'
+              )!.value === '1'
+            "
+          >
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Linea Investigación</mat-label>
+                  <mat-select formControlName="lineaInvestigacion">
+                    <mat-option
+                      *ngFor="let item of listadoLineaInvestigacion"
+                      [value]="item.codigo"
+                      (click)="obtenerGrupoInvestigacion(item.codigo)"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Grupo Investigación</mat-label>
+                  <mat-select formControlName="grupoInvestigacion">
+                    <mat-option
+                      *ngFor="let item of listadoGrupoInvestigacion"
+                      [value]="item.codigo"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pl-4 pt-4 pr-4">
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold">
+              Tipo de material presentado para puntuación
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row">
+              <div class="col">
+                <!-- <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Tipo de material</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    [formControl]="myControl"
+                    formControlName="tipoMaterial"
+                    [matAutocomplete]="auto"
+                    (focus)="onInputFocus()"
+                  />
+                  <mat-autocomplete
+                    #auto="matAutocomplete"
+                    [displayWith]="displayFn"
+                  >
+                    <mat-option
+                      *ngFor="let option of filteredOptions | async"
+                      [value]="option"
+                      (click)="
+                        obtenerTipoMaterialSubCategoriaPorTipoMaterial(
+                          option.codigo
+                        );
+                        obtenerTipoImpactoPorTipoMaterial(option.codigo);
+                        obtenerTipoAnexoPorTipoMaterial(option.codigo)
+                      "
+                    >
+                      {{ option.nombre }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field> -->
+
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Tipo de material</mat-label>
+                  <mat-select
+                    formControlName="tipoMaterial"
+                    placeholder="Seleccione el tipo de material"
+                  >
+                    <mat-option
+                      *ngFor="let item of listadoTipoMaterial"
+                      [value]="item.codigo"
+                      (click)="
+                        obtenerTipoMaterialSubCategoriaPorTipoMaterial(
+                          item.codigo
+                        );
+                        obtenerTipoImpactoPorTipoMaterial(item.codigo);
+                        obtenerTipoAnexoPorTipoMaterial(item.codigo)
+                      "
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div
+                class="col"
+                *ngIf="(listadoTipoMaterialSubCategoria | json) !== '[]'"
+              >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Categoría</mat-label>
+                  <mat-select
+                    formControlName="tipoMaterialSubCategoria"
+                    placeholder="Seleccione el tipo de material"
+                  >
+                    <mat-option
+                      (click)="obtenerMaterialConfiguracion()"
+                      *ngFor="let item of listadoTipoMaterialSubCategoria"
+                      [value]="item.codigo"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col" *ngIf="(listadoTipoImpacto | json) !== '[]'">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Tipo impacto</mat-label>
+                  <mat-select
+                    formControlName="tipoImpacto"
+                    placeholder="Seleccione el tipo de material"
+                  >
+                    <mat-option
+                      (click)="obtenerMaterialConfiguracion()"
+                      *ngFor="let item of listadoTipoImpacto"
+                      [value]="item.codigo"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pl-4 pt-2 pr-4">
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              Título del material
+              <span class="text-danger">*</span>
+            </h5>
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label
+                >Título del material en <b> idioma español</b></mat-label
+              >
+              <input formControlName="titulo" matInput />
+            </mat-form-field>
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label
+                >Título del material en <b> idioma inglés</b></mat-label
+              >
+              <input formControlName="traduccionTitulo" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row pl-4 pr-4 pt-2">
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                <div class="d-flex align-items-center mb-3">
+                  <h5
+                    class="card-title font-usco-gr font-weight-bold mb-0 me-2"
+                  >
+                    Autores
+                    <span class="text-danger">*</span> ({{ autores.length }})
+                  </h5>
+                  <button
+                    class="btn btn-usco-vt btn-sm ml-5"
+                    (click)="agregarAutor()"
+                  >
+                    <i class="fa-solid fa-plus"></i> Agregar otro autor
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div formArrayName="autores">
+              <div class="row row-cols-1 row-cols-md-2">
+                <div
+                  class="col"
+                  *ngFor="let autor of autores.controls; let i = index"
+                >
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <input
+                      matInput
+                      [formControl]="getAutor(i)"
+                      placeholder="Nombre del autor"
+                    />
+                    <mat-icon
+                      matSuffix
+                      color="warn"
+                      (click)="eliminarAutor(i)"
+                      class="cursor-select"
+                      *ngIf="i > 0"
+                      ><i class="fa-solid fa-xmark"></i
+                    ></mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row pl-4 pt-2 pb-4 pr-4"
+          *ngIf="
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 1 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 2 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 3 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 4
+          "
+        >
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              Información para artículo de revista
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Nombre de la revista</mat-label>
+                  <mat-select formControlName="revista">
+                    <mat-option
+                      *ngFor="let item of listadoRevistaMinciencias"
+                      [value]="item.codigo"
+                      (click)="cargarValoresRevista(item)"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>ISSN</mat-label>
+                  <input matInput formControlName="issn" readonly />
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Categoría de la revista en Minciencias al momento de la
+                    publicación</mat-label
+                  >
+                  <input matInput formControlName="categoria" readonly />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Dirección URL</mat-label>
+                  <input matInput />
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Tiempo requerido para la publicación del artículo en la
+                    revista</mat-label
+                  >
+                  <input matInput />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Fecha de recepción o sumisión del artículo a la
+                    revista</mat-label
+                  >
+                  <input matInput [matDatepicker]="picker1" />
+                  <mat-hint>Mes/Día/Año</mat-hint>
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Fecha de aprobación y/o publicación del artículo</mat-label
+                  >
+                  <input matInput [matDatepicker]="picker2" />
+                  <mat-hint>Mes/Día/Año</mat-hint>
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <section class="example-section">
+                  <small
+                    >Para la publicación del artículo, se invirtieron recursos
+                    económicos de la Universidad:</small
+                  >
+                  <mat-radio-group>
+                    <mat-radio-button class="example-margin" value="1"
+                      >Si</mat-radio-button
+                    >
+                    <mat-radio-button class="example-margin" value="2"
+                      >No</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row pl-4 pt-2 pb-4 pr-4"
+          *ngIf="
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 5 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              10 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 11
+          "
+        >
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              Información para libro o capítulo de libro
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>ISBN</mat-label>
+                  <input matInput />
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Editorial</mat-label>
+                  <input matInput />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Dirección URL</mat-label>
+                  <input matInput />
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Número de ejemplares presentados en físico</mat-label
+                  >
+                  <input matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row pl-4 pt-2 pr-4"
+          *ngIf="
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 1 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 5 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              10 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              11 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              12 ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              15 ||
+            (this.formularioMaterialAcademico.get('tipoMaterial')!.value ===
+              16 &&
+              this.formularioMaterialAcademico.get('tipoImpacto')!.value ===
+                1) ||
+            this.formularioMaterialAcademico.get('tipoMaterial')!.value === 19
+          "
+        >
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              Información producción académica
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label
+                    >Nombre del proyecto de Investigación del cual se genera el
+                    material, si aplica</mat-label
+                  >
+                  <input matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pl-4 pt-2 pr-4">
+          <div class="col">
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              El material presentado fue tenido en cuenta para cambio de
+              categoría en el escalafón docente
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row">
+              <div class="col">
+                <mat-radio-group formControlName="cambioCategoriaEscalafon">
+                  <mat-radio-button class="example-margin" value="1"
+                    >Si</mat-radio-button
+                  >
+                  <mat-radio-button class="example-margin" value="2"
+                    >No</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row pl-4 pt-4 pr-4"
+          *ngIf="(listadoTipoAnexo | json) !== '[]'"
+        >
+          <div
+            class="col p-4"
+            style="
+              background-color: #f9fafb;
+              border-radius: 12px;
+              border: solid 1px #aab5b9;
+            "
+          >
+            <h5 class="card-title font-usco-gr font-weight-bold mb-3">
+              Anexos a la solicitud
+              <span class="text-danger">*</span>
+            </h5>
+            <div class="row row-cols-1 row-cols-md-2">
+              <div class="col" *ngFor="let item of listadoTipoAnexo">
+                <label class="file example-full-width">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    aria-label="File browser example"
+                    (change)="change($event)"
+                  />
+                  <span class="file-custom">{{ item.nombre }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row text-center pb-4">
+          <div class="col">
+            <button
+              type="submit"
+              (click)="generarSolicitudPuntaje()"
+              class="btn-usco mt-4 font-weight-bold"
+            >
+              Enviar solicitud
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</app-navbar>

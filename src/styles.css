@@ -272,7 +272,6 @@ input[type="number"] {
 .mat-mdc-table .mat-mdc-header-cell {
   background: #F9FBFB !important;
   color: #4e6470 !important;
-  border-radius: 12px !important;
   font-weight: bold !important;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
@@ -305,7 +304,7 @@ input[type="number"] {
 }
 
 .font-sm-usco {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .pre {
@@ -325,4 +324,27 @@ input[type="number"] {
 
 .div-usco-20 {
   width: 20%;
+}
+
+.panel {
+  background-color: white;
+  border-radius: 12px;
+}
+
+.mdc-form-field>label {
+  margin-bottom: 0px !important;
+}
+
+.mat-mdc-checkbox.mat-accent {
+  --mdc-checkbox-selected-checkmark-color: #fff;
+  --mdc-checkbox-selected-focus-icon-color: #8f141b;
+  --mdc-checkbox-selected-hover-icon-color: #8f141b;
+  --mdc-checkbox-selected-icon-color: #8f141b;
+  --mdc-checkbox-selected-pressed-icon-color: #8f141b;
+  --mdc-checkbox-unselected-focus-icon-color: #212121;
+  --mdc-checkbox-unselected-hover-icon-color: #212121;
+  --mdc-checkbox-disabled-selected-icon-color: rgba(0, 0, 0, 0.38);
+  --mdc-checkbox-disabled-unselected-icon-color: rgba(0, 0, 0, 0.38);
+  --mdc-checkbox-unselected-icon-color: rgba(0, 0, 0, 0.54);
+  --mdc-checkbox-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
 }

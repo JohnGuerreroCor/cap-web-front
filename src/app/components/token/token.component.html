@@ -48,12 +48,12 @@
         <i class="fa-solid fa-shield-halved fa-2x"></i>
         <h6 class="font-weight-bold">Verificación en dos pasos</h6>
       </div>
-      <p class="text-center pt-2">
-        Se ha enviado a su correo institucional <br />
-        (<b *ngIf="correo">{{ correo.correo }}</b
-        >) un codigo de verificación. <br />
-        Ingrese el código de 5 digítos enviado <br />
-        a su correo electrónico.
+      <p class="text-center pt-2 pl-3 pr-3">
+        Se ha enviado a su correo institucional (<b *ngIf="correo">{{
+          correo.correo
+        }}</b
+        >) un codigo de verificación. Ingrese el código de 5 digítos enviado a
+        su correo electrónico.
       </p>
       <form [formGroup]="formToken" class="pl-4 pr-4">
         <div class="otp-container mb-4">

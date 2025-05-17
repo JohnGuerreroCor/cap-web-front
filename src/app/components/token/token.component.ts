@@ -93,23 +93,23 @@ export class TokenComponent implements OnInit {
   // Método para validar el token ingresado
   validarToken() {
     this.cargando = true;
-    if (this.formToken.get('token')!.value) {
-      this.tokenService
-        .validartokenUsco(this.formToken.get('token')!.value)
-        .subscribe(
-          (response) => {
-            this.auth.guardarCodigoverificacion('true');
-            Swal.fire({
-              icon: 'success',
-              title: 'Inicio de sesión ',
-              text: 'Código de verificación correcto.',
-              confirmButtonText: 'Listo',
-              confirmButtonColor: '#8f141b',
-            });
-            this.router.navigate(['/inicio']);
-          },
-          (err) => this.fError(err)
-        );
+    console.log(this.formToken.get('otp')!.value);
+    const token = this.formToken.get('otp')!.value.join('');
+    if (token) {
+      this.tokenService.validartokenUsco(token).subscribe(
+        (response) => {
+          this.auth.guardarCodigoverificacion('true');
+          Swal.fire({
+            icon: 'success',
+            title: 'Inicio de sesión ',
+            text: 'Código de verificación correcto.',
+            confirmButtonText: 'Listo',
+            confirmButtonColor: '#8f141b',
+          });
+          this.router.navigate(['/inicio']);
+        },
+        (err) => this.fError(err)
+      );
     }
   }
 

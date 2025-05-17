@@ -7,6 +7,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AuthGuard } from './guard/auth.guard';
 import { AutorizacionDatosComponent } from './components/autorizacion-datos/autorizacion-datos.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -18,8 +19,12 @@ const routes: Routes = [
 
   { path: 'tratamiento-datos', component: AutorizacionDatosComponent },
 
-  //{ path: 'inicio', component: InicioComponent, canActivate: [AuthGuard] },
-  { path: 'inicio', component: InicioComponent },
+  { path: 'inicio', component: InicioComponent, canActivate: [AuthGuard] },
+  {
+    path: 'solicitud/:id',
+    component: SolicitudComponent,
+    canActivate: [AuthGuard],
+  },
 
   { path: '**', redirectTo: 'acceso-denegado' },
 ];

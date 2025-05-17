@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="text-center font-usco-gr">
+  Autorizo notificaciones electrónicas
+</h2>
+<mat-dialog-content class="pb-0">
+  <div class="row mt-2">
+    <div class="col pl-4 pr-4">
+      <p class="font-usco-gr text-justify">
+        Yo,
+        <b
+          >{{auth.user.personaNombre | titlecase}} {{auth.user.personaApellido |
+          titlecase}}</b
+        >, identificado con la cédula de ciudadanía
+        <b>N° {{auth.user.personaIdentificacion | titlecase}}</b>, y vinculado
+        como <b>Docente de planta</b> en la sede de <b>Neiva</b>, manifiesto que
+        autorizo recibir notificaciones electrónicas a través del correo
+        electrónico <b>{{auth.user.personaEmailInterno}}</b> de actos y
+        situaciones administrativas emitidos por la Universidad Surcolombiana,
+        susceptibles de notificación.
+      </p>
+      <p class="font-usco-gr text-justify">
+        El correo aquí registrado será entendido como mi domicilio para efectos
+        de notificaciones.
+      </p>
+    </div>
+  </div>
+  <div class="row text-center mb-4">
+    <div class="col">
+      <button mat-dialog-close class="btn-usco mt-4 font-weight-bold">
+        Aceptar
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>

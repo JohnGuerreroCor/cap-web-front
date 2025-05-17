@@ -1,4 +1,4 @@
-# Módulo CAP Web Front
+# Módulo Web Front de Asignación y Reconocimiento de Puntaje CAP - Universidad Surcolombiana
 
 ![Logo de la USCO](https://www.usco.edu.co/imagen-institucional/logo/universidad-surcolombiana.png)
 
