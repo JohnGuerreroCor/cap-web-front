@@ -166,6 +166,21 @@ input[type="number"] {
   color: #edeff0;
 }
 
+.btn-usco {
+  background-color: #7a0c1e;
+  color: #dfd4a6;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.btn-usco:disabled {
+  background-color: #4d626c;
+  color: #edeff0;
+}
+
 .div-left {
   background-color: white;
   border-radius: 12px;
@@ -270,7 +285,7 @@ input[type="number"] {
 
 /* ----- AJUSTE DISEÑO TABLA MATERIAL */
 .mat-mdc-table .mat-mdc-header-cell {
-  background: #F9FBFB !important;
+  background: #f9fbfb !important;
   color: #4e6470 !important;
   font-weight: bold !important;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
@@ -331,7 +346,7 @@ input[type="number"] {
   border-radius: 12px;
 }
 
-.mdc-form-field>label {
+.mdc-form-field > label {
   margin-bottom: 0px !important;
 }
 

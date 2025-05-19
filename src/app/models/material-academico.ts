@@ -5,7 +5,7 @@ import { TipoEnvioMaterial } from './tipo-envio-material';
 
 export class MaterialAcademico {
   codigo!: number;
-  solicitud!: SolicitudPuntaje;
+  solicitudPuntajeCodigo!: number;
   docenteGrupo!: DocenteGrupo;
   materialConfiguracion!: MaterialConfiguracion;
   tipoEnvioMaterial!: TipoEnvioMaterial;
@@ -13,5 +13,6 @@ export class MaterialAcademico {
   traduccionTitulo!: string;
   cantidadAutores!: number;
   cambioCategoriaEscalafon!: number;
+  nombreProyectoInvestigacion!: string;
   estado!: number;
 }

@@ -69,7 +69,12 @@
             mat-cell
             *matCellDef="let element"
             class="font-sm-usco font-usco-gr"
-          ></td>
+          >
+            {{
+              element.materialAcademico.materialConfiguracion.tipoMaterial
+                .nombre
+            }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef>Fecha</th>

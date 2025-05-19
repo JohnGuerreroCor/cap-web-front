@@ -158,7 +158,8 @@
                           item.codigo
                         );
                         obtenerTipoImpactoPorTipoMaterial(item.codigo);
-                        obtenerTipoAnexoPorTipoMaterial(item.codigo)
+                        obtenerTipoAnexoPorTipoMaterial(item.codigo);
+                        obtenerMaterialConfiguracion()
                       "
                       >{{ item.nombre }}</mat-option
                     >
@@ -273,6 +274,7 @@
             </div>
           </div>
         </div>
+        <!--SECCIÓN ARTÍCULO REVISTA-->
         <div
           class="row pl-4 pt-2 pb-4 pr-4"
           *ngIf="
@@ -321,7 +323,7 @@
               <div class="col">
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Dirección URL</mat-label>
-                  <input matInput />
+                  <input formControlName="articuloRevistaUrl" matInput />
                 </mat-form-field>
               </div>
               <div class="col">
@@ -330,7 +332,11 @@
                     >Tiempo requerido para la publicación del artículo en la
                     revista</mat-label
                   >
-                  <input matInput />
+                  <input
+                    type="number"
+                    formControlName="articuloRevistaMesesRequeridosPublicacion"
+                    matInput
+                  />
                 </mat-form-field>
               </div>
             </div>
@@ -341,7 +347,11 @@
                     >Fecha de recepción o sumisión del artículo a la
                     revista</mat-label
                   >
-                  <input matInput [matDatepicker]="picker1" />
+                  <input
+                    matInput
+                    formControlName="articuloRevistaFechaSumision"
+                    [matDatepicker]="picker1"
+                  />
                   <mat-hint>Mes/Día/Año</mat-hint>
                   <mat-datepicker-toggle
                     matIconSuffix
@@ -355,7 +365,11 @@
                   <mat-label
                     >Fecha de aprobación y/o publicación del artículo</mat-label
                   >
-                  <input matInput [matDatepicker]="picker2" />
+                  <input
+                    matInput
+                    formControlName="articuloRevistaFechaAprobacion"
+                    [matDatepicker]="picker2"
+                  />
                   <mat-hint>Mes/Día/Año</mat-hint>
                   <mat-datepicker-toggle
                     matIconSuffix
@@ -370,7 +384,9 @@
                     >Para la publicación del artículo, se invirtieron recursos
                     económicos de la Universidad:</small
                   >
-                  <mat-radio-group>
+                  <mat-radio-group
+                    formControlName="articuloRevistaRecursosUniversidad"
+                  >
                     <mat-radio-button class="example-margin" value="1"
                       >Si</mat-radio-button
                     >
@@ -383,6 +399,7 @@
             </div>
           </div>
         </div>
+        <!--SECCIÓN LIBRO CAPÍTULO-->
         <div
           class="row pl-4 pt-2 pb-4 pr-4"
           *ngIf="
@@ -401,13 +418,13 @@
               <div class="col">
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>ISBN</mat-label>
-                  <input matInput />
+                  <input formControlName="libroCapituloIsbn" matInput />
                 </mat-form-field>
               </div>
               <div class="col">
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Editorial</mat-label>
-                  <input matInput />
+                  <input formControlName="libroCapituloEditorial" matInput />
                 </mat-form-field>
               </div>
             </div>
@@ -415,7 +432,7 @@
               <div class="col">
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Dirección URL</mat-label>
-                  <input matInput />
+                  <input formControlName="libroCapituloUrl" matInput />
                 </mat-form-field>
               </div>
               <div class="col">
@@ -423,12 +440,17 @@
                   <mat-label
                     >Número de ejemplares presentados en físico</mat-label
                   >
-                  <input matInput />
+                  <input
+                    type="number"
+                    formControlName="libroCapituloEjemplares"
+                    matInput
+                  />
                 </mat-form-field>
               </div>
             </div>
           </div>
         </div>
+        <!--SECCIÓN PRODUCCIÓN ACADÉMICA-->
         <div
           class="row pl-4 pt-2 pr-4"
           *ngIf="
@@ -461,7 +483,10 @@
                     >Nombre del proyecto de Investigación del cual se genera el
                     material, si aplica</mat-label
                   >
-                  <input matInput />
+                  <input
+                    formControlName="nombreProyectoInvestigacion"
+                    matInput
+                  />
                 </mat-form-field>
               </div>
             </div>
@@ -488,10 +513,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="row pl-4 pt-4 pr-4"
-          *ngIf="(listadoTipoAnexo | json) !== '[]'"
-        >
+        <div class="row pl-4 pt-4 pr-4" *ngIf="anexos?.length">
           <div
             class="col p-4"
             style="
@@ -501,29 +523,39 @@
             "
           >
             <h5 class="card-title font-usco-gr font-weight-bold mb-3">
-              Anexos a la solicitud
-              <span class="text-danger">*</span>
+              Anexos a la solicitud <span class="text-danger">*</span>
             </h5>
+
             <div class="row row-cols-1 row-cols-md-2">
-              <div class="col" *ngFor="let item of listadoTipoAnexo">
+              <div
+                class="col"
+                *ngFor="let anexo of anexos.controls; let i = index"
+              >
                 <label class="file example-full-width">
                   <input
                     type="file"
                     accept="application/pdf"
-                    aria-label="File browser example"
-                    (change)="change($event)"
+                    (change)="onFileChange($event, i)"
                   />
-                  <span class="file-custom">{{ item.nombre }}</span>
+                  <span class="file-custom">
+                    {{
+                      anexo.value.nombreArchivo
+                        ? anexo.value.nombreArchivo
+                        : anexo.value.tipoAnexo.nombre
+                    }}</span
+                  >
                 </label>
               </div>
             </div>
           </div>
         </div>
+
         <div class="row text-center pb-4">
           <div class="col">
             <button
               type="submit"
               (click)="generarSolicitudPuntaje()"
+              [disabled]="formularioMaterialAcademico.invalid"
               class="btn-usco mt-4 font-weight-bold"
             >
               Enviar solicitud
