@@ -22,6 +22,7 @@ import {
   SolicitudComponent,
   ModalNotificacionCorreo,
 } from './components/solicitud/solicitud.component';
+import { RevisionComponent } from './components/revision/revision.component';
 
 registerLocaleData(localeEsCO, 'es-CO');
 
@@ -37,6 +38,7 @@ registerLocaleData(localeEsCO, 'es-CO');
     AutorizacionDatosComponent,
     SolicitudComponent,
     ModalNotificacionCorreo,
+    RevisionComponent,
   ],
   imports: [
     BrowserModule,

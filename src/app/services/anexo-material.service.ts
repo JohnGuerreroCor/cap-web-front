@@ -86,4 +86,11 @@ export class AnexoMaterialService {
       { headers: this.aggAutorizacionHeader() }
     );
   }
+
+  obtenerAnexo(codigo: number): Observable<any> {
+    return this.http.get<any>(`${this.url}/mirar-archivo/${codigo}`, {
+      headers: this.aggAutorizacionHeader(),
+      responseType: 'blob' as 'json',
+    });
+  }
 }

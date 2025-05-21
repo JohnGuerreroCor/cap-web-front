@@ -40,11 +40,11 @@ import { AutorMaterial } from 'src/app/models/autor-material';
 import { AnexoMaterial } from 'src/app/models/anexo-material';
 
 @Component({
-  selector: 'app-solicitud',
-  templateUrl: './solicitud.component.html',
-  styleUrls: ['./solicitud.component.css'],
+  selector: 'app-revision',
+  templateUrl: './revision.component.html',
+  styleUrls: ['./revision.component.css'],
 })
-export class SolicitudComponent implements OnInit {
+export class RevisionComponent implements OnInit {
   listadoLineaInvestigacion: LineaInvestigacion[] = [];
   listadoGrupoInvestigacion: GrupoInvestigacion[] = [];
   listadoTipoMaterial: TipoMaterial[] = [];
@@ -53,6 +53,11 @@ export class SolicitudComponent implements OnInit {
   listadoTipoAnexo: TipoAnexo[] = [];
   listadoRevistaMinciencias: RevistaMinciencias[] = [];
   acta!: Acta;
+  solicitudPuntaje!: SolicitudPuntaje;
+  anexoMaterial!: AnexoMaterial[];
+  articuloRevista!: ArticuloRevista;
+  autorMaterial!: AutorMaterial[];
+  libroCapitulo!: LibroCapitulo;
   dialogRef!: MatDialogRef<any>;
   formularioSolicitudPuntaje!: FormGroup;
   formularioMaterialAcademico!: FormGroup;
@@ -62,6 +67,7 @@ export class SolicitudComponent implements OnInit {
   nombreArchivo = 'Archivo';
   file!: FileList;
   codigoActa!: number;
+  codigoSolicitud!: number;
   editar: boolean = false;
   myControl = new FormControl<string | TipoMaterial>('');
   filteredOptions!: Observable<TipoMaterial[]>;
@@ -87,16 +93,32 @@ export class SolicitudComponent implements OnInit {
     public autorMaterialService: AutorMaterialService,
     public anexoMaterialService: AnexoMaterialService,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     public dialog: MatDialog,
     private formBuilder: FormBuilder
   ) {
     this.activatedRoute.params.subscribe((params) => {
-      this.codigoActa = params['id'];
-      this.actaService.obtenerActa(this.codigoActa).subscribe((data) => {
-        this.acta = data;
-      });
+      this.codigoSolicitud = params['id'];
+      this.solicitudPuntajeService
+        .obtenerSolicitudPuntaje(this.codigoSolicitud)
+        .subscribe((data) => {
+          this.solicitudPuntaje = data;
+          console.log(data);
+
+          this.obtenerAnexoMaterialPorMaterialAcademico(
+            this.solicitudPuntaje.materialAcademico.codigo
+          );
+          this.obtenerArticuloRevistaPorMaterialAcademico(
+            this.solicitudPuntaje.materialAcademico.codigo
+          );
+          this.obtenerAutorMaterialPorMaterialAcademico(
+            this.solicitudPuntaje.materialAcademico.codigo
+          );
+          this.obtenerLibroCapituloPorMaterialAcademico(
+            this.solicitudPuntaje.materialAcademico.codigo
+          );
+        });
     });
   }
   ngOnInit(): void {
@@ -110,6 +132,46 @@ export class SolicitudComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value?.nombre || '')),
       map((nombre) => this._filter(nombre))
     );
+  }
+
+  obtenerAnexoMaterialPorMaterialAcademico(codigo: number) {
+    this.anexoMaterialService
+      .obtenerAnexoMaterialPorMaterialAcademico(codigo)
+      .subscribe((data) => {
+        this.anexoMaterial = data;
+      });
+  }
+
+  obtenerArticuloRevistaPorMaterialAcademico(codigo: number) {
+    this.articuloRevistaService
+      .obtenerArticuloRevistaPorMaterialAcademico(codigo)
+      .subscribe((data) => {
+        this.articuloRevista = data;
+      });
+  }
+
+  obtenerAutorMaterialPorMaterialAcademico(codigo: number) {
+    this.autorMaterialService
+      .obtenerAutorMaterialPorMaterialAcademico(codigo)
+      .subscribe((data) => {
+        this.autorMaterial = data;
+      });
+  }
+
+  obtenerLibroCapituloPorMaterialAcademico(codigo: number) {
+    this.libroCapituloService
+      .obtenerLibroCapituloPorMaterialAcademico(codigo)
+      .subscribe((data) => {
+        this.libroCapitulo = data;
+      });
+  }
+
+  verAnexo(codigo: number) {
+    this.anexoMaterialService.obtenerAnexo(codigo).subscribe((data) => {
+      var blob = new Blob([data], { type: 'application/pdf' });
+      var fileURL = URL.createObjectURL(blob);
+      window.open(fileURL);
+    });
   }
 
   displayFn(material: TipoMaterial): string {
@@ -158,6 +220,10 @@ export class SolicitudComponent implements OnInit {
       (data) => {
         console.log('|||||||:', data);
         if (data > 0) {
+          this.toast.fire({
+            icon: 'success',
+            title: 'Registro Grupo Investigación.',
+          });
           this.formularioMaterialAcademico.get('docenteGrupo')!.setValue(data);
           this.generarMaterialAcademico();
         } else {
@@ -176,7 +242,6 @@ export class SolicitudComponent implements OnInit {
       grupoInvestigacion: new FormControl(''),
       perteneceGrupoInvestigacion: new FormControl('', Validators.required),
       tipoMaterial: new FormControl('', Validators.required),
-      tipoMaterialNombre: new FormControl(''),
       tipoMaterialSubCategoria: new FormControl(''),
       tipoImpacto: new FormControl(''),
       revista: new FormControl(''),
@@ -243,24 +308,18 @@ export class SolicitudComponent implements OnInit {
 
     this.anexos.controls.forEach((control) => {
       const tipoAnexo: TipoAnexo = control.value.tipoAnexo;
-      const archivoOriginal: File = control.value.archivo;
-      const nombreSinEspacios = archivoOriginal.name.replace(/\s/g, '');
-
-      // Crear un nuevo archivo con el nombre sin espacios
-      const archivoLimpio = new File([archivoOriginal], nombreSinEspacios, {
-        type: archivoOriginal.type,
-      });
+      const archivo: File = control.value.archivo;
       const anexoMaterial: AnexoMaterial = {
         codigo: 0,
         materialAcademicoCodigo: materialAcademicoCodigo,
         tipoAnexo: { codigo: tipoAnexo.codigo, nombre: '', estado: 1 },
-        nombre: nombreSinEspacios,
+        nombre: archivo.name,
         ruta: '', // el backend lo resuelve
         estado: 1,
       };
 
       this.anexoMaterialService
-        .insertarAnexoMaterial(archivoLimpio, anexoMaterial)
+        .insertarAnexoMaterial(archivo, anexoMaterial)
         .subscribe({
           next: () => console.log('Anexo guardado exitosamente'),
           error: (err) => console.error('Error al guardar anexo:', err),
@@ -318,49 +377,13 @@ export class SolicitudComponent implements OnInit {
         (data) => {
           console.log('|||||||:', data);
           if (data > 0) {
+            this.toast.fire({
+              icon: 'success',
+              title: 'Registro Material Académico.',
+            });
             this.formularioMaterialAcademico
               .get('materialAcademicoCodigo')!
               .setValue(data);
-            this.solicitudPuntajeService
-              .enviarNotificacionSolicitudRealizada(
-                this.authService.user.personaEmailInterno,
-                this.authService.user.personaNombre +
-                  ' ' +
-                  this.authService.user.personaApellido,
-                this.formularioMaterialAcademico.get('solicitudPuntaje')!.value,
-                '' + this.acta.codigo,
-                this.acta.nombre,
-                this.formularioMaterialAcademico.get('tipoMaterialNombre')!
-                  .value,
-                this.formularioMaterialAcademico.get('titulo')!.value
-              )
-              .subscribe((data) => {
-                if (data.estado == true) {
-                  Swal.fire({
-                    icon: 'success',
-                    html:
-                      `
-                          <h2><strong>Solicitud realizada correctamente.</strong></h2>
-                          <p>Se ha enviado el correo de confirmación al correo<br>
-                          <strong>` +
-                      this.authService.user.personaEmailInterno +
-                      `</strong>.</p>
-                          <p>Por favor, estar atento a las futuras actualizaciones de estado de su solicitud.</p>
-                        `,
-                    showCloseButton: true,
-                    allowOutsideClick: false, // Desactivar cierre al hacer clic fuera
-                    allowEscapeKey: false, // Desactivar cierre con tecla ESC
-                    allowEnterKey: false, // Desactivar cierre con tecla ENTER
-                    confirmButtonText: 'Aceptar',
-                    confirmButtonColor: '#8B0000',
-                    willClose: () => {
-                      this.router.navigate(['/inicio']);
-                    },
-                  });
-                } else {
-                  this.mensajeError();
-                }
-              });
             this.guardarAutores();
             this.guardarAnexos();
             if (
@@ -450,7 +473,10 @@ export class SolicitudComponent implements OnInit {
         (data) => {
           console.log('|||||||:', data);
           if (data > 0) {
-            console.log('Envía Artículo Revista');
+            this.toast.fire({
+              icon: 'success',
+              title: 'Registro Artículo Revista.',
+            });
           } else {
             this.mensajeError();
           }
@@ -487,7 +513,10 @@ export class SolicitudComponent implements OnInit {
       (data) => {
         console.log('|||||||:', data);
         if (data > 0) {
-          console.log('Envía Libro Capítulo');
+          this.toast.fire({
+            icon: 'success',
+            title: 'Registro Libro Capítulo.',
+          });
         } else {
           this.mensajeError();
         }
@@ -542,18 +571,14 @@ export class SolicitudComponent implements OnInit {
         (data) => {
           console.log('|||||||:', data);
           if (data > 0) {
+            this.toast.fire({
+              icon: 'success',
+              title: 'Registro Grupo Investigación.',
+            });
             this.formularioMaterialAcademico
               .get('solicitudPuntaje')!
               .setValue(data);
-            if (
-              this.formularioMaterialAcademico.get(
-                'perteneceGrupoInvestigacion'
-              )!.value == 1
-            ) {
-              this.generarDocenteGrupo();
-            } else {
-              this.generarMaterialAcademico();
-            }
+            this.generarDocenteGrupo();
           } else {
             this.mensajeError();
           }
@@ -603,16 +628,13 @@ export class SolicitudComponent implements OnInit {
       };
 
       this.autorMaterialService.insertarAutorMaterial(autor).subscribe({
-        next: (id) => console.log('Envía Autores'),
+        next: (id) =>
+          this.toast.fire({
+            icon: 'success',
+            title: 'Registro Autor Material.',
+          }),
         error: (err) => this.mensajeError(),
       });
-    });
-  }
-
-  notificacionCorreo(): void {
-    this.dialogRef = this.dialog.open(ModalNotificacionCorreo, {
-      width: '50%',
-      disableClose: true,
     });
   }
 
@@ -648,14 +670,8 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
-  obtenerTipoMaterialSubCategoriaPorTipoMaterial(
-    codigo: number,
-    nombre: string
-  ) {
+  obtenerTipoMaterialSubCategoriaPorTipoMaterial(codigo: number) {
     this.formularioMaterialAcademico.get('tipoMaterial')!.setValue(codigo);
-    this.formularioMaterialAcademico
-      .get('tipoMaterialNombre')!
-      .setValue(nombre);
     this.materialAcademicoService
       .obtenerTipoMaterialSubCategoriaPorTipoMaterial(codigo)
       .subscribe((data) => {
@@ -707,11 +723,9 @@ export class SolicitudComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      console.log('////', file.name.replace(/\s/g, ''));
-
       this.anexos.at(index).patchValue({
         archivo: file,
-        nombreArchivo: file.name.replace(/\s/g, ''), // Guardamos el nombre del archivo
+        nombreArchivo: file.name, // Guardamos el nombre del archivo
       });
     }
   }
@@ -764,19 +778,4 @@ export class SolicitudComponent implements OnInit {
       this.mensajeError();
     }
   }
-}
-
-//// MODAL
-
-@Component({
-  selector: 'modal-notificacion-correo',
-  templateUrl: 'modal-notificacion-correo.html',
-  styleUrls: ['./solicitud.component.css'],
-})
-export class ModalNotificacionCorreo {
-  constructor(
-    public dialogRef: MatDialogRef<ModalNotificacionCorreo>,
-    public dialog: MatDialog,
-    public auth: AuthService
-  ) {}
 }

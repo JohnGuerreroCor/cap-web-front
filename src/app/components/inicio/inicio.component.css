@@ -55,9 +55,17 @@ legend.scheduler-border {
 }
 
 .status-cerrada {
-  background-color: #ffc107;
+  background-color: #CC9900;
 }
 
 .text-small {
   font-size: 0.9rem;
+}
+
+.btn-yellow {
+  background-color: #f0b403  !important;
+}
+
+.btn-orange {
+  background-color: #FD7E14 !important;
 }

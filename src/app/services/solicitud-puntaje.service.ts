@@ -90,4 +90,19 @@ export class SolicitudPuntajeService {
       { headers: this.aggAutorizacionHeader() }
     );
   }
+
+  enviarNotificacionSolicitudRealizada(
+    emailDocente: String,
+    nombreDocente: String,
+    isolicitud: String,
+    codigoActa: String,
+    nombreActa: String,
+    tipoMaterial: String,
+    nombreMaterial: String
+  ): Observable<any> {
+    return this.http.get<any>(
+      `${this.url}/enviar-notificacion-solicitud-realizada/${emailDocente}/${nombreDocente}/${isolicitud}/${codigoActa}/${nombreActa}/${tipoMaterial}/${nombreMaterial}`,
+      { headers: this.aggAutorizacionHeader() }
+    );
+  }
 }

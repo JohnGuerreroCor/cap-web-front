@@ -1,0 +1,684 @@
+<app-navbar>
+  <form [formGroup]="formularioMaterialAcademico">
+    <div class="row m-4">
+      <div class="col panel">
+        <div class="row pl-5 pr-5 pt-3 pb-4 ml-5 mr-5">
+          <div class="col">
+            <table
+              border="1"
+              class="example-full-width text-center font-weight-bold"
+              style="border: 2px solid #8f141b; border-collapse: collapse"
+            >
+              <tr>
+                <td rowspan="2" style="border: 2px solid #8f141b">
+                  <img
+                    src="assets/escudo-universidad-surcolombiana.png"
+                    class="p-3"
+                    style="width: 100px"
+                  />
+                </td>
+                <td
+                  colspan="5"
+                  class="bg-usco-vt text-white font-weight-bold"
+                  style="border: 2px solid #8f141b"
+                >
+                  UNIVERSIDAD SURCOLOMBIANA INVESTIGACIÓN
+                </td>
+                <td rowspan="2" colspan="2" style="border: 2px solid #8f141b">
+                  <img
+                    src="assets/icontec-sellos.svg"
+                    class="p-3"
+                    style="width: 250px"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5" style="border: 2px solid #8f141b">
+                  SOLICITUD PUNTUACIÓN DE PRODUCTIVIDAD ACADÉMICA
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-usco-vt text-white"
+                  style="border: 2px solid #8f141b"
+                >
+                  CÓDIGO
+                </td>
+                <td style="border: 2px solid #8f141b">MI-INV-FO-05</td>
+                <td
+                  class="bg-usco-vt text-white"
+                  style="border: 2px solid #8f141b"
+                >
+                  VERSIÓN
+                </td>
+                <td style="border: 2px solid #8f141b">9</td>
+                <td
+                  class="bg-usco-vt text-white"
+                  style="border: 2px solid #8f141b"
+                >
+                  VIGENCIA
+                </td>
+                <td style="border: 2px solid #8f141b">2023</td>
+                <td
+                  class="bg-usco-vt text-white"
+                  style="border: 2px solid #8f141b"
+                >
+                  PÁGINA
+                </td>
+                <td style="border: 2px solid #8f141b">1 de 1</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <h5 class="font-weight-bold">Información del Solicitante</h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr class="text-left">
+                <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                  No. Identificacion
+                </td>
+                <td colspan="4" class="pl-4">
+                  {{ authService.user.personaIdentificacion }}
+                </td>
+              </tr>
+              <tr class="text-left">
+                <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                  Nombres y Apellidos
+                </td>
+                <td colspan="4" class="pl-4">
+                  {{ authService.user.personaNombre | titlecase }}
+                  {{ authService.user.personaApellido | titlecase }}
+                </td>
+              </tr>
+              <tr class="text-left">
+                <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                  Facultad
+                </td>
+                <td colspan="4" class="pl-4"></td>
+              </tr>
+              <tr class="text-left">
+                <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                  Programa
+                </td>
+                <td colspan="4" class="pl-4"></td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Vinculación docente
+                </td>
+                <td class="pl-4">Tiempo completo planta</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div *ngIf="solicitudPuntaje">
+          <div class="row mt-3 pl-5 pr-5 ml-5 mr-5">
+            <div class="col">
+              <table border="1" class="example-full-width">
+                <tr>
+                  <td class="bg-usco-vt text-white pl-3 td-30">
+                    Pertenece a un grupo de Investigación?
+                  </td>
+                  <td class="pl-4">
+                    <span
+                      *ngIf="
+                        solicitudPuntaje.materialAcademico.docenteGrupo
+                          .codigo == 0
+                      "
+                      >No</span
+                    >
+                    <span
+                      *ngIf="
+                        solicitudPuntaje.materialAcademico.docenteGrupo
+                          .codigo != 0
+                      "
+                      >Si</span
+                    >
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div
+            class="row mt-3 pl-5 pr-5 ml-5 mr-5"
+            *ngIf="solicitudPuntaje.materialAcademico.docenteGrupo.codigo != 0"
+          >
+            <div class="col">
+              <table border="1" class="example-full-width">
+                <tr class="text-left">
+                  <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                    Nombre del grupo
+                  </td>
+                  <td colspan="4" class="pl-4">
+                    {{
+                      solicitudPuntaje.materialAcademico.docenteGrupo
+                        .grupoInvestigacion.nombre
+                    }}
+                  </td>
+                </tr>
+                <tr class="text-left">
+                  <td class="bg-usco-vt text-white font-weight-bold pl-3 td-30">
+                    Línea de investigación
+                  </td>
+                  <td colspan="4" class="pl-4">
+                    {{
+                      solicitudPuntaje.materialAcademico.docenteGrupo
+                        .grupoInvestigacion.lineaInvestigacionNombre
+                    }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <h5 class="font-weight-bold">
+              Tipo de material presentado para puntuación
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">Tipo Material</td>
+                <td class="pl-4">
+                  {{
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterial.nombre
+                  }}
+                </td>
+                <td
+                  class="bg-usco-vt text-white pl-3 td-30"
+                  *ngIf="
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterialSubCategoria.nombre == ''
+                  "
+                >
+                  Subcategoria
+                </td>
+                <td
+                  class="pl-4"
+                  *ngIf="
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterialSubCategoria.nombre == ''
+                  "
+                >
+                  {{
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterialSubCategoria.nombre
+                  }}
+                </td>
+                <td
+                  class="bg-usco-vt text-white pl-3"
+                  *ngIf="
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoImpacto.nombre == ''
+                  "
+                >
+                  Impacto
+                </td>
+                <td
+                  class="pl-4"
+                  *ngIf="
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoImpacto.nombre == ''
+                  "
+                >
+                  {{
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoImpacto.nombre
+                  }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Título del Material:
+                </td>
+                <td class="pl-4">
+                  {{ solicitudPuntaje.materialAcademico.titulo }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Título en Inglés:
+                </td>
+                <td class="pl-4">
+                  {{ solicitudPuntaje.materialAcademico.traduccionTitulo }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="articuloRevista">
+          <div class="col">
+            <h5 class="font-weight-bold">Información artículo de revista:</h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="articuloRevista">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Nombre de la revista:
+                </td>
+                <td class="pl-4">
+                  {{ articuloRevista.revistaMinciencias.nombre }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Tipo de Artículo:
+                </td>
+                <td class="pl-4">
+                  {{
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterial.nombre
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">ISSN:</td>
+                <td class="pl-4">
+                  {{ articuloRevista.revistaMinciencias.issn }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Categoría de la revista en Minciencias al momento de la
+                  publicación:
+                </td>
+                <td class="pl-4">
+                  {{
+                    articuloRevista.revistaMinciencias
+                      .categoriaMincienciasNombre
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">Dirección URL:</td>
+                <td class="pl-4">{{ articuloRevista.url }}</td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Tiempo requerido para la publicación del artículo en la
+                  revista:
+                </td>
+                <td class="pl-4">
+                  {{ articuloRevista.mesesRequeridosPublicacion }} Meses
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Fecha de recepción o sumisión del artículo a la revista:
+                </td>
+                <td class="pl-4">
+                  {{ articuloRevista.fechaSumision | date : "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Fecha de aprobación y/o publicación del artículo:
+                </td>
+                <td class="pl-4">
+                  {{ articuloRevista.fechaAprobacion | date : "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Para la publicación del artículo, se invirtieron recursos
+                  económicos de la Universidad:
+                </td>
+                <td class="pl-4">
+                  <span *ngIf="articuloRevista.recursosUniversidad == 0"
+                    >No</span
+                  >
+                  <span *ngIf="articuloRevista.recursosUniversidad != 0"
+                    >Si</span
+                  >
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="autorMaterial">
+          <div class="col">
+            <h5 class="font-weight-bold" *ngIf="autorMaterial.length > 1">
+              Autores
+            </h5>
+            <h5 class="font-weight-bold" *ngIf="autorMaterial.length == 1">
+              Autor
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="autorMaterial">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr *ngFor="let item of autorMaterial; let i = index">
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Autor # {{ i + 1 }}:
+                </td>
+                <td class="pl-4">
+                  {{ item.nombre }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="libroCapitulo">
+          <div class="col">
+            <h5 class="font-weight-bold">
+              Información libro o capítulo de libro:
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="libroCapitulo">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Tipo de libro o capítulo de libro:
+                </td>
+                <td class="pl-4">
+                  {{
+                    solicitudPuntaje.materialAcademico.materialConfiguracion
+                      .tipoMaterial.nombre
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">ISBN:</td>
+                <td class="pl-4">{{ libroCapitulo.isbn }}</td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">Editorial:</td>
+                <td class="pl-4">{{ libroCapitulo.editorial }}</td>
+              </tr>
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Dirección URL Editorial:
+                </td>
+                <td class="pl-4">{{ libroCapitulo.url }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div *ngIf="solicitudPuntaje">
+          <div
+            class="row mt-4 pl-5 pr-5 ml-5 mr-5"
+            *ngIf="
+              solicitudPuntaje.materialAcademico.nombreProyectoInvestigacion !=
+              ''
+            "
+          >
+            <div class="col">
+              <h5 class="font-weight-bold">Información producción académica</h5>
+            </div>
+          </div>
+          <div
+            class="row mt-3 pl-5 pr-5 ml-5 mr-5"
+            *ngIf="
+              solicitudPuntaje.materialAcademico.nombreProyectoInvestigacion !=
+              ''
+            "
+          >
+            <div class="col">
+              <table border="1" class="example-full-width">
+                <tr>
+                  <td class="bg-usco-vt text-white pl-3 td-30">
+                    Nombre del proyecto de Investigación del cual se genera el
+                    material:
+                  </td>
+                  <td class="pl-4">
+                    {{
+                      solicitudPuntaje.materialAcademico
+                        .nombreProyectoInvestigacion
+                    }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <h5 class="font-weight-bold">
+              El material presentado fue tenido en cuenta para cambio de
+              categoría en el escalafón docente:
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  El material presentado fue tenido en cuenta para cambio de
+                  categoría en el escalafón docente:
+                </td>
+                <td class="pl-4">
+                  <span
+                    *ngIf="
+                      solicitudPuntaje.materialAcademico
+                        .cambioCategoriaEscalafon == 0
+                    "
+                    >No</span
+                  >
+                  <span
+                    *ngIf="
+                      solicitudPuntaje.materialAcademico
+                        .cambioCategoriaEscalafon != 0
+                    "
+                    >Si</span
+                  >
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="libroCapitulo">
+          <div class="col">
+            <h5 class="font-weight-bold">Número de ejemplares presentados</h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="libroCapitulo">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Número de ejemplares presentados:
+                </td>
+                <td class="pl-4">{{ libroCapitulo.ejemplares }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <h5 class="font-weight-bold">
+              Declaración de responsabilidad de la información:
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <p class="text-justify">
+              En mi calidad de docente de la Universidad Surcolombiana de Neiva
+              Huila, me obligo a hacer envío del presente formulario debidamente
+              diligenciado, con los soportes correspondientes. Me abstengo de
+              enviar información que no sea real, y/o que no esté debidamente
+              soportada por los documentos idóneos para este efecto. En caso de
+              no tener certeza acerca de la veracidad de la información enviada
+              al Comité Asignación de Puntaje - CAP, o de no tener seguridad en
+              cuanto a los soportes idóneos para sustentar estos datos, me
+              abstendré de realizar el registro.
+            </p>
+            <p class="text-justify">
+              En estos términos declaro mi responsabilidad sobre el manejo que
+              daré a la información personal y académica a enviar al CAP.
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <h5 class="font-weight-bold">
+              Autorización para notificaciones electrónicas:
+            </h5>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <p class="text-justify">
+              Yo,
+              <b
+                >{{ authService.user.personaNombre | titlecase }}
+                {{ authService.user.personaApellido | titlecase }}</b
+              >, identificado con la cédula de ciudadanía
+              <b>N° {{ authService.user.personaIdentificacion }}</b
+              >, y vinculado como <b>Docente de planta</b> en la sede de
+              <b>Neiva</b>, manifiesto que autorizo recibir notificaciones
+              electrónicas a través del correo electrónico
+              <b>{{ authService.user.personaEmailInterno }}</b> de actos y
+              situaciones administrativas emitidos por la Universidad
+              Surcolombiana, susceptibles de notificación.
+            </p>
+            <p class="text-justify">
+              El correo aquí registrado será entendido como mi domicilio para
+              efectos de notificaciones.
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <h5 class="font-weight-bold">Información de recepción</h5>
+          </div>
+        </div>
+        <div class="row mt-3 pl-5 pr-5 ml-5 mr-5" *ngIf="solicitudPuntaje">
+          <div class="col">
+            <table border="1" class="example-full-width">
+              <tr>
+                <td class="bg-usco-vt text-white pl-3 td-30">
+                  Estado de la solicitud:
+                </td>
+                <td class="pl-4">
+                  <!-- Pendiente - Amarillo (ya existe) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 1"
+                    class="text-warning"
+                  >
+                    <span class="status-cerrada"></span>
+                    <i class="fa-regular fa-circle-dot"></i>
+                  </span>
+
+                  <!-- Aprobada - Verde (éxito) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 2"
+                    class="text-success"
+                  >
+                    <i class="fa-solid fa-circle-check"></i>
+                  </span>
+
+                  <!-- Rechazada - Rojo (error/negación) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 3"
+                    class="text-danger"
+                  >
+                    <i class="fa-solid fa-circle-xmark"></i>
+                  </span>
+
+                  <!-- Cancelada - Gris (neutral/inactivo) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 4"
+                    class="text-secondary"
+                  >
+                    <i class="fa-solid fa-ban"></i>
+                  </span>
+
+                  <!-- Completada - Verde azulado (éxito completo) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 5"
+                    class="text-info"
+                  >
+                    <i class="fa-solid fa-circle-check"></i>
+                  </span>
+
+                  <!-- En proceso - Azul (acción en curso) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 6"
+                    class="text-primary"
+                  >
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                  </span>
+
+                  <!-- Devuelta para corrección - Naranja (atención requerida) -->
+                  <span
+                    *ngIf="solicitudPuntaje.estadoSolicitud.codigo == 7"
+                    class="text-orange"
+                  >
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                  </span>
+                  {{ solicitudPuntaje.estadoSolicitud.nombre }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5">
+          <div class="col">
+            <h5 class="font-weight-bold">Anexos cargados</h5>
+          </div>
+        </div>
+        <div class="row mt-4 pl-5 pr-5 ml-5 mr-5 px-4">
+          <div
+            class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 d-flex"
+            *ngFor="let item of anexoMaterial"
+          >
+            <div
+              class="card shadow-sm h-100 border-0 w-100"
+              style="border-radius: 12px; background-color: #f8f9fa"
+            >
+              <div
+                class="card-body d-flex flex-column justify-content-between align-items-center text-center"
+              >
+                <div class="d-flex flex-column align-items-center mb-2 w-100">
+                  <i class="fa-solid fa-file-pdf fa-2x text-danger mb-2"></i>
+                  <div class="text-truncate w-100" [title]="item.nombre">
+                    <strong>{{ item.nombre }}</strong>
+                  </div>
+                </div>
+                <div class="small font-usco-gr mb-2 text-center w-100">
+                  <i class="fa-solid fa-bookmark"></i>
+                  {{ item.tipoAnexo.nombre }}
+                </div>
+                <button
+                  class="btn btn-usco-vt btn-sm mt-auto w-75"
+                  (click)="verAnexo(+item.ruta)"
+                >
+                  <i class="fa-solid fa-download me-1"></i> Ver/Descargar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</app-navbar>

@@ -42,8 +42,8 @@ export class LibroCapituloService {
 
   obtenerLibroCapituloPorMaterialAcademico(
     codigo: number
-  ): Observable<LibroCapitulo[]> {
-    return this.http.get<LibroCapitulo[]>(
+  ): Observable<LibroCapitulo> {
+    return this.http.get<LibroCapitulo>(
       `${this.url}/obtener-listado-libro-capitulo-por-material-academico/${codigo}`,
       {
         headers: this.aggAutorizacionHeader(),

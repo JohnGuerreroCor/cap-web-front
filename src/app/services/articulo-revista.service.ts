@@ -42,8 +42,8 @@ export class ArticuloRevistaService {
 
   obtenerArticuloRevistaPorMaterialAcademico(
     codigo: number
-  ): Observable<ArticuloRevista[]> {
-    return this.http.get<ArticuloRevista[]>(
+  ): Observable<ArticuloRevista> {
+    return this.http.get<ArticuloRevista>(
       `${this.url}/obtener-listado-articulo-revista-por-material-academico/${codigo}`,
       {
         headers: this.aggAutorizacionHeader(),

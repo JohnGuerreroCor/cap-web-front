@@ -8,6 +8,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AuthGuard } from './guard/auth.guard';
 import { AutorizacionDatosComponent } from './components/autorizacion-datos/autorizacion-datos.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { RevisionComponent } from './components/revision/revision.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -23,6 +24,11 @@ const routes: Routes = [
   {
     path: 'solicitud/:id',
     component: SolicitudComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'revision-solicitud/:id',
+    component: RevisionComponent,
     canActivate: [AuthGuard],
   },
 
